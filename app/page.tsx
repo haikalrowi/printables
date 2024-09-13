@@ -1,3 +1,4 @@
+import { CtrlJ } from "@/components/ctrl-j";
 import { Main } from "@/components/main";
 import { SiteFooter } from "@/components/site-footer";
 
@@ -6,6 +7,7 @@ export default function Home() {
     <div className="flex min-h-screen w-full flex-col">
       <Main />
       <SiteFooter />
+      <CtrlJ />
     </div>
   );
 }
