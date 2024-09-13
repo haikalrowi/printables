@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "node --eval \"fs.rmSync('.next',{recursive:true,force:true});\" && prisma generate && next dev",
+    "dev": "node --eval \"fs.rmSync('.next',{recursive:true,force:true});\" && prisma generate && next dev --turbo",
     "build": "node --eval \"fs.rmSync('.next',{recursive:true,force:true});\" && prisma generate && prisma db push && next build",
     "start": "next start",
     "lint": "next lint",
