@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { DialogProps } from "@radix-ui/react-dialog";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -24,7 +25,9 @@ const FormSchema = z.object({
   cover: z.instanceof(File).optional(),
 });
 
-export function AlbumForm() {
+interface AlbumFormProps extends DialogProps {}
+
+export function AlbumForm({ onOpenChange }: AlbumFormProps) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -35,6 +38,9 @@ export function AlbumForm() {
   });
 
   const onSubmit: Parameters<typeof form.handleSubmit>[0] = (data, event) => {
+    if (!onOpenChange) {
+      return;
+    }
     const formData = new FormData(event?.target);
     const newVariable = FormSchema.parse(Object.fromEntries(formData));
     console.log(newVariable);
@@ -46,6 +52,7 @@ export function AlbumForm() {
         </pre>
       ),
     });
+    onOpenChange(false);
   };
 
   return (

@@ -2,15 +2,7 @@ import { PlusIcon } from "lucide-react";
 
 import { AlbumArtwork } from "@/components/album-artwork";
 import { listenNowAlbums } from "@/components/album-data";
-import { AlbumForm } from "@/components/album-form";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { DashboardPrintablesDialog } from "@/components/dashboard-printables-diaolog";
 import { cn } from "@/lib/utils";
 
 export default function Printables() {
@@ -26,16 +18,7 @@ export default function Printables() {
           >
             <PlusIcon className="size-8 text-muted group-hover:text-muted-foreground" />
           </div>
-          <Dialog>
-            <DialogTrigger className="absolute inset-0" />
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Create a printable</DialogTitle>
-                <DialogDescription />
-              </DialogHeader>
-              <AlbumForm />
-            </DialogContent>
-          </Dialog>
+          <DashboardPrintablesDialog className="absolute inset-0" />
         </div>
       </div>
       {listenNowAlbums.map((album) => (
