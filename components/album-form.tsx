@@ -27,10 +27,10 @@ const FormSchema = z.object({
 });
 
 interface AlbumFormProps extends DialogProps {
-  type: "create" | "update";
+  action: "create" | "update" | "delete";
 }
 
-export function AlbumForm({ type, onOpenChange }: AlbumFormProps) {
+export function AlbumForm({ action, onOpenChange }: AlbumFormProps) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -49,14 +49,27 @@ export function AlbumForm({ type, onOpenChange }: AlbumFormProps) {
     }
     const formData = new FormData(event?.target);
     const { name, artist } = FormSchema.parse(Object.fromEntries(formData));
-    await upsert({
-      id: type === "create" ? "" : "",
-      name,
-      artist,
-      cover:
-        "https://images.unsplash.com/photo-1611348586804-61bf6c080437?w=300&dpr=2&q=80",
-    });
-    toast({ title: "OK" });
+    if (action === "create") {
+      await upsert({
+        id: "",
+        name,
+        artist,
+        cover:
+          "https://images.unsplash.com/photo-1611348586804-61bf6c080437?w=300&dpr=2&q=80",
+      });
+      toast({ title: "OK" });
+    } else if (action === "update") {
+      await upsert({
+        id: "",
+        name,
+        artist,
+        cover:
+          "https://images.unsplash.com/photo-1611348586804-61bf6c080437?w=300&dpr=2&q=80",
+      });
+      toast({ title: "OK" });
+    } else if (action === "delete") {
+      toast({ title: "OK" });
+    }
     onOpenChange(false);
   };
 

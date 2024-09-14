@@ -8,6 +8,7 @@ interface AlbumArtworkProps extends React.HTMLAttributes<HTMLDivElement> {
   aspectRatio?: "portrait" | "square";
   width?: number;
   height?: number;
+  overlay?: React.ReactNode;
 }
 
 export function AlbumArtwork({
@@ -15,22 +16,24 @@ export function AlbumArtwork({
   aspectRatio = "portrait",
   width,
   height,
+  overlay,
   className,
   ...props
 }: AlbumArtworkProps) {
   return (
     <div className={cn("space-y-3", className)} {...props}>
-      <div className="overflow-hidden rounded-md">
+      <div className="group relative overflow-hidden rounded-md">
         <Image
           src={album.cover}
           alt={album.name}
           width={width}
           height={height}
           className={cn(
-            "h-auto w-auto object-cover transition-all hover:scale-105",
+            "h-auto w-auto object-cover transition-all group-hover:scale-105",
             aspectRatio === "portrait" ? "aspect-[3/4]" : "aspect-square",
           )}
         />
+        <div className="absolute inset-0">{overlay}</div>
       </div>
       <div className="space-y-1 text-sm">
         <h3 className="font-medium leading-none">{album.name}</h3>
