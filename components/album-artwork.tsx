@@ -1,11 +1,10 @@
+import { Prisma } from "@prisma/client";
 import Image from "next/image";
 
 import { cn } from "@/lib/utils";
 
-import { Album } from "./album-data";
-
 interface AlbumArtworkProps extends React.HTMLAttributes<HTMLDivElement> {
-  album: Album;
+  album: Pick<Prisma.AlbumCreateInput, "name" | "artist" | "cover">;
   aspectRatio?: "portrait" | "square";
   width?: number;
   height?: number;

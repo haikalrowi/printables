@@ -1,11 +1,13 @@
 import { PlusIcon } from "lucide-react";
 
+import { findMany } from "@/actions/album";
 import { AlbumArtwork } from "@/components/album-artwork";
-import { listenNowAlbums } from "@/components/album-data";
 import { DashboardPrintablesDialog } from "@/components/dashboard-printables-diaolog";
 import { cn } from "@/lib/utils";
 
-export default function Printables() {
+export const revalidate = 0;
+
+export default async function Printables() {
   return (
     <div className="grid justify-items-center gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3 xl:grid-cols-4">
       <div className={cn("space-y-3", "w-[250px]")}>
@@ -21,7 +23,7 @@ export default function Printables() {
           <DashboardPrintablesDialog className="absolute inset-0" />
         </div>
       </div>
-      {listenNowAlbums.map((album) => (
+      {(await findMany()).map((album) => (
         <AlbumArtwork
           key={album.name}
           album={album}

@@ -28,7 +28,7 @@ export function DashboardPrintablesDialog({
           <DialogTitle>Create a printable</DialogTitle>
           <DialogDescription />
         </DialogHeader>
-        <AlbumForm onOpenChange={setOpen} />
+        <AlbumForm type="create" onOpenChange={setOpen} />
       </DialogContent>
     </Dialog>
   );

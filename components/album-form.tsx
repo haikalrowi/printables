@@ -5,6 +5,7 @@ import { DialogProps } from "@radix-ui/react-dialog";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { upsert } from "@/actions/album";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -25,9 +26,11 @@ const FormSchema = z.object({
   cover: z.instanceof(File).optional(),
 });
 
-interface AlbumFormProps extends DialogProps {}
+interface AlbumFormProps extends DialogProps {
+  type: "create" | "update";
+}
 
-export function AlbumForm({ onOpenChange }: AlbumFormProps) {
+export function AlbumForm({ type, onOpenChange }: AlbumFormProps) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -37,21 +40,23 @@ export function AlbumForm({ onOpenChange }: AlbumFormProps) {
     },
   });
 
-  const onSubmit: Parameters<typeof form.handleSubmit>[0] = (data, event) => {
+  const onSubmit: Parameters<typeof form.handleSubmit>[0] = async (
+    data,
+    event,
+  ) => {
     if (!onOpenChange) {
       return;
     }
     const formData = new FormData(event?.target);
-    const newVariable = FormSchema.parse(Object.fromEntries(formData));
-    console.log(newVariable);
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
+    const { name, artist } = FormSchema.parse(Object.fromEntries(formData));
+    await upsert({
+      id: type === "create" ? "" : "",
+      name,
+      artist,
+      cover:
+        "https://images.unsplash.com/photo-1611348586804-61bf6c080437?w=300&dpr=2&q=80",
     });
+    toast({ title: "OK" });
     onOpenChange(false);
   };
 
