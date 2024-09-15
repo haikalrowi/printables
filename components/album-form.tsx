@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogProps } from "@radix-ui/react-dialog";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { upsert } from "@/actions/album";
@@ -18,72 +18,52 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
 
-const FormSchema = z.object({
-  name: z.string().min(2, {
-    message: "Name must be at least 3 characters.",
-  }),
-  artist: z.string(),
-  cover: z.instanceof(File).optional(),
-});
+import { AlbumArtworkProps } from "./album-artwork";
 
-interface AlbumFormProps extends DialogProps {
-  action: "create" | "update" | "delete";
-}
+interface AlbumFormProps
+  extends Pick<DialogProps, "onOpenChange">,
+    Partial<Pick<AlbumArtworkProps, "album">> {}
 
-export function AlbumForm({ action, onOpenChange }: AlbumFormProps) {
+export function AlbumForm({ onOpenChange, album }: AlbumFormProps) {
+  const FormSchema = z.object({
+    name: z.string(),
+    artist: z.string(),
+    cover: z.instanceof(FileList),
+  });
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      name: "",
-      artist: "",
+      name: album?.name,
+      artist: album?.artist,
       cover: undefined,
     },
   });
-
-  const onSubmit: Parameters<typeof form.handleSubmit>[0] = async (
-    data,
-    event,
-  ) => {
+  const onSubmit: SubmitHandler<z.infer<typeof FormSchema>> = async (data) => {
     if (!onOpenChange) {
       return;
     }
-    const formData = new FormData(event?.target);
-    const { name, artist } = FormSchema.parse(Object.fromEntries(formData));
-    if (action === "create") {
-      await upsert({
-        id: "",
-        name,
-        artist,
-        cover:
-          "https://images.unsplash.com/photo-1611348586804-61bf6c080437?w=300&dpr=2&q=80",
-      });
-      toast({ title: "OK" });
-    } else if (action === "update") {
-      await upsert({
-        id: "",
-        name,
-        artist,
-        cover:
-          "https://images.unsplash.com/photo-1611348586804-61bf6c080437?w=300&dpr=2&q=80",
-      });
-      toast({ title: "OK" });
-    } else if (action === "delete") {
-      toast({ title: "OK" });
-    }
+    const { name, artist } = data;
+    await upsert({
+      id: album?.id ?? "",
+      name,
+      artist,
+      cover:
+        "https://images.unsplash.com/photo-1611348586804-61bf6c080437?w=300&dpr=2&q=80",
+    });
+    toast({ title: "OK" });
     onOpenChange(false);
   };
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
           name="name"
-          render={({ field }) => (
+          render={() => (
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...form.register("name")} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -92,11 +72,11 @@ export function AlbumForm({ action, onOpenChange }: AlbumFormProps) {
         <FormField
           control={form.control}
           name="artist"
-          render={({ field }) => (
+          render={() => (
             <FormItem>
               <FormLabel>Artist</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...form.register("artist")} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -105,16 +85,11 @@ export function AlbumForm({ action, onOpenChange }: AlbumFormProps) {
         <FormField
           control={form.control}
           name="cover"
-          render={({ field }) => (
+          render={() => (
             <FormItem>
               <FormLabel>Cover</FormLabel>
               <FormControl>
-                <Input
-                  type="file"
-                  {...field}
-                  value={undefined}
-                  onChange={undefined}
-                />
+                <Input type="file" {...form.register("cover")} />
               </FormControl>
               <FormMessage />
             </FormItem>

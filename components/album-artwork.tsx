@@ -3,12 +3,13 @@ import Image from "next/image";
 
 import { cn } from "@/lib/utils";
 
-interface AlbumArtworkProps extends React.HTMLAttributes<HTMLDivElement> {
-  album: Pick<Prisma.AlbumCreateInput, "name" | "artist" | "cover">;
+export interface AlbumArtworkProps
+  extends React.HTMLAttributes<HTMLDivElement> {
+  album: Pick<Prisma.AlbumCreateInput, "id" | "name" | "artist" | "cover">;
   aspectRatio?: "portrait" | "square";
   width?: number;
   height?: number;
-  overlay?: React.ReactNode;
+  overlayContent?: React.ReactNode;
 }
 
 export function AlbumArtwork({
@@ -16,7 +17,7 @@ export function AlbumArtwork({
   aspectRatio = "portrait",
   width,
   height,
-  overlay,
+  overlayContent,
   className,
   ...props
 }: AlbumArtworkProps) {
@@ -33,7 +34,7 @@ export function AlbumArtwork({
             aspectRatio === "portrait" ? "aspect-[3/4]" : "aspect-square",
           )}
         />
-        <div className="absolute inset-0">{overlay}</div>
+        <div className="absolute inset-0">{overlayContent}</div>
       </div>
       <div className="space-y-1 text-sm">
         <h3 className="font-medium leading-none">{album.name}</h3>
