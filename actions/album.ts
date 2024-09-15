@@ -26,7 +26,7 @@ export async function findMany() {
   return prisma.album.findMany();
 }
 
-export async function del({ id }: Prisma.AlbumCreateInput) {
+export async function del({ id }: Prisma.AlbumWhereUniqueInput) {
   await verifySession();
   await prisma.album.delete({ where: { id } });
   revalidatePath("/", "layout");

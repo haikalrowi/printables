@@ -3,9 +3,9 @@
 import { DialogTriggerProps } from "@radix-ui/react-dialog";
 import { useState } from "react";
 
+import { del } from "@/actions/album";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -14,6 +14,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -22,6 +23,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useToast } from "@/hooks/use-toast";
 
 import { AlbumArtworkProps } from "./album-artwork";
 import { AlbumForm } from "./album-form";
@@ -39,7 +41,7 @@ export function DashboardPrintablesDialog({
   album,
   ...props
 }: DashboardPrintablesDialogProps) {
-  const [open, setOpen] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
   const renderDialogContent = () => (
     <DialogContent>
       <DialogHeader>
@@ -47,34 +49,52 @@ export function DashboardPrintablesDialog({
         {action === "update" && <DialogTitle>Edit a printable</DialogTitle>}
         <DialogDescription />
       </DialogHeader>
-      <AlbumForm onOpenChange={setOpen} album={album} />
+      <AlbumForm onOpenChange={setOpenDialog} album={album} />
     </DialogContent>
   );
-  const renderAlertDialogContent = () => (
-    <AlertDialogContent>
-      <AlertDialogHeader>
-        <AlertDialogTitle>Delete the printable?</AlertDialogTitle>
-        <AlertDialogDescription>
-          This action cannot be undone. This will permanently delete your
-          account and remove your data from our servers.
-        </AlertDialogDescription>
-      </AlertDialogHeader>
-      <AlertDialogFooter>
-        <AlertDialogCancel>Cancel</AlertDialogCancel>
-        <AlertDialogAction>Continue</AlertDialogAction>
-      </AlertDialogFooter>
-    </AlertDialogContent>
-  );
+  const [openAlertDialog, setOpenAlertDialog] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const { toast } = useToast();
+  const renderAlertDialogContent = () => {
+    const deleteAlbum = async () => {
+      setDeleteLoading(true);
+      await del({ id: album?.id });
+      setDeleteLoading(false);
+      setOpenAlertDialog(false);
+      toast({ title: "OK" });
+    };
+    return (
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Delete the printable?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This action cannot be undone. This will permanently delete the
+            printable.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <Button
+            variant={"destructive"}
+            onClick={deleteAlbum}
+            disabled={deleteLoading}
+          >
+            Delete
+          </Button>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    );
+  };
   if (action === "create" || action === "update") {
     return (
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogTrigger {...props}>{triggerContent}</DialogTrigger>
         {renderDialogContent()}
       </Dialog>
     );
   } else if (action === "delete") {
     return (
-      <AlertDialog>
+      <AlertDialog open={openAlertDialog} onOpenChange={setOpenAlertDialog}>
         <AlertDialogTrigger {...props}>{triggerContent}</AlertDialogTrigger>
         {renderAlertDialogContent()}
       </AlertDialog>
