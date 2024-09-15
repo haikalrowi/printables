@@ -13,10 +13,10 @@ export async function Main() {
           <AlbumArtwork
             key={album.name}
             album={album}
-            className="w-[250px]"
+            className="w-64"
             aspectRatio="portrait"
-            width={250}
-            height={330}
+            width={16 * 16}
+            height={16 * 20}
           />
         ))}
       </div>

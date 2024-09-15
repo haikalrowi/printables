@@ -12,10 +12,10 @@ export default async function Printables() {
     <div className="grid justify-items-center gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3 xl:grid-cols-4">
       <AlbumArtwork
         album={{ name: "", artist: "", cover: "data:," }}
-        className="w-[250px]"
+        className="w-64"
         aspectRatio="square"
-        width={250}
-        height={330}
+        width={16 * 16}
+        height={16 * 16}
         overlayContent={
           <DashboardPrintablesDialog
             action="create"
@@ -35,7 +35,7 @@ export default async function Printables() {
           width={250}
           height={330}
           overlayContent={
-            <div className="absolute right-1 top-1 flex flex-col gap-1 opacity-0 group-hover:opacity-100">
+            <div className="absolute right-1 top-1 flex flex-col space-y-1 opacity-0 group-hover:opacity-100">
               <DashboardPrintablesDialog
                 action="update"
                 album={album}
