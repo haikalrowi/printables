@@ -21,6 +21,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/hooks/use-toast";
+import { createClient } from "@/lib/supabase/client";
+import { albumCover } from "@/lib/supabase/constants";
 
 import { AlbumArtworkProps } from "./album-artwork";
 
@@ -29,6 +31,7 @@ interface AlbumFormProps
     Partial<Pick<AlbumArtworkProps, "album">> {}
 
 export function AlbumForm({ onOpenChange, album }: AlbumFormProps) {
+  const supabase = createClient();
   const FormSchema = z.object({
     name: z.string(),
     artist: z.string(),
@@ -47,7 +50,8 @@ export function AlbumForm({ onOpenChange, album }: AlbumFormProps) {
     if (coverWatch) {
       return URL.createObjectURL(coverWatch);
     } else if (album?.cover) {
-      return album.cover;
+      const res = supabase.storage.from(albumCover).getPublicUrl(album.cover);
+      return res.data.publicUrl;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coverWatch]);
@@ -55,13 +59,22 @@ export function AlbumForm({ onOpenChange, album }: AlbumFormProps) {
     if (!onOpenChange) {
       return;
     }
-    const { name, artist } = data;
+    const { name, artist, cover } = data;
+    const coverFile = cover[0];
+    let coverPath = album?.cover;
+    if (coverPath) {
+      if (coverFile?.size) {
+        await supabase.storage.from(albumCover).update(coverPath, coverFile);
+      }
+    } else {
+      coverPath = `${Date.now()}`;
+      await supabase.storage.from(albumCover).upload(coverPath, coverFile);
+    }
     await upsert({
       id: album?.id ?? "",
       name,
       artist,
-      cover:
-        "https://images.unsplash.com/photo-1611348586804-61bf6c080437?w=300&dpr=2&q=80",
+      cover: coverPath,
     });
     toast({ title: "OK" });
     onOpenChange(false);

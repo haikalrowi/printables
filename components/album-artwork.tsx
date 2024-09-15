@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 export interface AlbumArtworkProps
   extends React.HTMLAttributes<HTMLDivElement> {
   album: Pick<Prisma.AlbumCreateInput, "id" | "name" | "artist" | "cover">;
+  albumCoverSrc: string;
   aspectRatio?: "portrait" | "square";
   width?: number;
   height?: number;
@@ -14,6 +15,7 @@ export interface AlbumArtworkProps
 
 export function AlbumArtwork({
   album,
+  albumCoverSrc,
   aspectRatio = "portrait",
   width,
   height,
@@ -25,12 +27,12 @@ export function AlbumArtwork({
     <div className={cn("space-y-3", className)} {...props}>
       <div className="group relative overflow-hidden rounded-md">
         <Image
-          src={album.cover}
+          src={albumCoverSrc}
           alt={album.name}
           width={width}
           height={height}
           className={cn(
-            "h-auto w-auto object-cover transition-all group-hover:scale-105",
+            "h-auto w-full object-cover transition-all group-hover:scale-105",
             aspectRatio === "portrait" ? "aspect-[3/4]" : "aspect-square",
           )}
         />

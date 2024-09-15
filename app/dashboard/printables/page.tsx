@@ -4,15 +4,19 @@ import { findMany } from "@/actions/album";
 import { AlbumArtwork } from "@/components/album-artwork";
 import { DashboardPrintablesDialog } from "@/components/dashboard-printables-diaolog";
 import { Button } from "@/components/ui/button";
+import { albumCover } from "@/lib/supabase/constants";
+import { createClient } from "@/lib/supabase/server";
 
 export const revalidate = 0;
 
 export default async function Printables() {
+  const supabase = createClient();
   return (
     <div className="grid justify-items-center gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3 xl:grid-cols-4">
       <AlbumArtwork
-        album={{ name: "", artist: "", cover: "data:," }}
-        className="w-64"
+        album={{ name: "", artist: "", cover: "" }}
+        albumCoverSrc="data:,"
+        className="w-64 [&_img]:opacity-0"
         aspectRatio="square"
         width={16 * 16}
         height={16 * 16}
@@ -26,44 +30,53 @@ export default async function Printables() {
           />
         }
       />
-      {(await findMany()).map((album) => (
-        <AlbumArtwork
-          key={album.name}
-          album={album}
-          className="w-[250px]"
-          aspectRatio="square"
-          width={250}
-          height={330}
-          overlayContent={
-            <div className="absolute right-1 top-1 flex flex-col space-y-1 opacity-0 group-hover:opacity-100">
-              <DashboardPrintablesDialog
-                action="update"
-                album={album}
-                asChild
-                triggerContent={
-                  <Button variant={"outline"} size={"icon"} className="size-5">
-                    <PencilIcon className="size-3" />
-                  </Button>
-                }
-              />
-              <DashboardPrintablesDialog
-                action="delete"
-                album={album}
-                asChild
-                triggerContent={
-                  <Button
-                    variant={"destructive"}
-                    size={"icon"}
-                    className="size-5"
-                  >
-                    <TrashIcon className="size-3" />
-                  </Button>
-                }
-              />
-            </div>
-          }
-        />
-      ))}
+      {(await findMany()).map((album) => {
+        const res = supabase.storage.from(albumCover).getPublicUrl(album.cover);
+        const albumCoverSrc = res.data.publicUrl;
+        return (
+          <AlbumArtwork
+            key={album.name}
+            album={album}
+            albumCoverSrc={albumCoverSrc}
+            className="w-64"
+            aspectRatio="square"
+            width={16 * 16}
+            height={16 * 16}
+            overlayContent={
+              <div className="absolute right-1 top-1 flex flex-col space-y-1 opacity-0 group-hover:opacity-100">
+                <DashboardPrintablesDialog
+                  action="update"
+                  album={album}
+                  asChild
+                  triggerContent={
+                    <Button
+                      variant={"outline"}
+                      size={"icon"}
+                      className="size-5"
+                    >
+                      <PencilIcon className="size-3" />
+                    </Button>
+                  }
+                />
+                <DashboardPrintablesDialog
+                  action="delete"
+                  album={album}
+                  asChild
+                  triggerContent={
+                    <Button
+                      variant={"destructive"}
+                      size={"icon"}
+                      className="size-5"
+                    >
+                      <TrashIcon className="size-3" />
+                    </Button>
+                  }
+                />
+              </div>
+            }
+          />
+        );
+      })}
     </div>
   );
 }
