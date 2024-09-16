@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
-interface _Link {
+interface Navigation {
   href: string;
   icon: JSX.Element;
   text: string;
@@ -27,7 +27,7 @@ export const links = [
     text: "Printables",
     badgeContent: 0,
   },
-] as const satisfies _Link[];
+] as const satisfies Navigation[];
 
 interface DashboardNavigationProps {
   mobile: boolean;

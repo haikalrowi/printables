@@ -11,6 +11,7 @@ export const revalidate = 0;
 
 export default async function DashboardPrintables() {
   const supabase = createClient();
+  const albums = await findMany();
   return (
     <div className="grid justify-items-center gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3 xl:grid-cols-4">
       <AlbumArtwork
@@ -30,7 +31,7 @@ export default async function DashboardPrintables() {
           />
         }
       />
-      {(await findMany()).map((album) => {
+      {albums.map((album) => {
         const res = supabase.storage.from(albumCover).getPublicUrl(album.cover);
         const albumCoverSrc = res.data.publicUrl;
         return (

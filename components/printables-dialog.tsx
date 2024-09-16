@@ -27,7 +27,7 @@ export function PrintablesDialog({
   ...props
 }: PrintablesDialogProps) {
   if (!album?.cover) {
-    return;
+    return null;
   }
   const supabase = createClient();
   const res = supabase.storage.from(albumCover).getPublicUrl(album.cover);
