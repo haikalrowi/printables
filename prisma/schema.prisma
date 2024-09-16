@@ -22,11 +22,12 @@ model Password {
 }
 
 model Album {
-  id            String          @id @default(uuid())
-  name          String
-  artist        String
-  cover         String
-  AlbumDownload AlbumDownload[]
+  id                 String          @id @default(uuid())
+  name               String
+  artist             String
+  cover              String
+  google_drive_uc_id String
+  AlbumDownload      AlbumDownload[]
 }
 
 model AlbumDownload {

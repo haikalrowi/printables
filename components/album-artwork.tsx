@@ -5,7 +5,10 @@ import { cn } from "@/lib/utils";
 
 export interface AlbumArtworkProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  album: Pick<Prisma.AlbumCreateInput, "id" | "name" | "artist" | "cover">;
+  album: Pick<
+    Prisma.AlbumCreateInput,
+    "id" | "name" | "artist" | "cover" | "google_drive_uc_id"
+  >;
   albumCoverSrc: string;
   aspectRatio?: "portrait" | "square";
   width?: number;

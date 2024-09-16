@@ -1,5 +1,8 @@
+"use client";
+
 import { DialogTriggerProps } from "@radix-ui/react-dialog";
 import Image from "next/image";
+import { useState } from "react";
 
 import {
   Dialog,
@@ -9,8 +12,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { createClient } from "@/lib/supabase/client";
 import { albumCover } from "@/lib/supabase/constants";
-import { createClient } from "@/lib/supabase/server";
 
 import { AlbumArtworkProps } from "./album-artwork";
 import { PrintablesDownloadForm } from "./printables-download-form";
@@ -26,6 +29,7 @@ export function PrintablesDialog({
   album,
   ...props
 }: PrintablesDialogProps) {
+  const [open, setOpen] = useState(false);
   if (!album?.cover) {
     return null;
   }
@@ -33,7 +37,7 @@ export function PrintablesDialog({
   const res = supabase.storage.from(albumCover).getPublicUrl(album.cover);
   const albumCoverSrc = res.data.publicUrl;
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger {...props}>{triggerContent}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -48,7 +52,11 @@ export function PrintablesDialog({
             width={16 * 12}
             height={16 * 12}
           />
-          <PrintablesDownloadForm className="flex aspect-square w-1/2 flex-col" />
+          <PrintablesDownloadForm
+            className="flex aspect-square w-1/2 flex-col"
+            onOpenChange={setOpen}
+            album={album}
+          />
         </div>
       </DialogContent>
     </Dialog>

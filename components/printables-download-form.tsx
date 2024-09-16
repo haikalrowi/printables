@@ -1,9 +1,11 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { DialogProps } from "@radix-ui/react-dialog";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { create } from "@/actions/album-download";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -18,11 +20,17 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
+import { AlbumArtworkProps } from "./album-artwork";
+
 interface PrintablesDownloadFormProps
-  extends React.FormHTMLAttributes<HTMLFormElement> {}
+  extends React.FormHTMLAttributes<HTMLFormElement>,
+    Pick<DialogProps, "onOpenChange">,
+    Partial<Pick<AlbumArtworkProps, "album">> {}
 
 export function PrintablesDownloadForm({
   className,
+  onOpenChange,
+  album,
 }: PrintablesDownloadFormProps) {
   const FormSchema = z.object({
     email: z.string().email({
@@ -35,15 +43,14 @@ export function PrintablesDownloadForm({
       email: "",
     },
   });
-  const onSubmit: SubmitHandler<z.infer<typeof FormSchema>> = (data) => {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+  const onSubmit: SubmitHandler<z.infer<typeof FormSchema>> = async (data) => {
+    if (!onOpenChange) {
+      return;
+    }
+    const { email } = data;
+    await create({ email, Album: { connect: { id: album?.id } } });
+    onOpenChange(false);
+    toast({ title: "OK" });
   };
   return (
     <Form {...form}>
@@ -65,7 +72,9 @@ export function PrintablesDownloadForm({
             </FormItem>
           )}
         />
-        <Button type="submit">Download</Button>
+        <Button type="submit" disabled={form.formState.isSubmitting}>
+          Download
+        </Button>
       </form>
     </Form>
   );

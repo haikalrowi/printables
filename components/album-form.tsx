@@ -36,6 +36,7 @@ export function AlbumForm({ onOpenChange, album }: AlbumFormProps) {
     name: z.string(),
     artist: z.string(),
     cover: z.instanceof(FileList),
+    google_drive_uc_id: z.string().url({ message: "Must be URL." }),
   });
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -43,6 +44,7 @@ export function AlbumForm({ onOpenChange, album }: AlbumFormProps) {
       name: album?.name,
       artist: album?.artist,
       cover: undefined,
+      google_drive_uc_id: album?.google_drive_uc_id,
     },
   });
   const coverWatch = form.watch("cover")?.[0];
@@ -59,7 +61,7 @@ export function AlbumForm({ onOpenChange, album }: AlbumFormProps) {
     if (!onOpenChange) {
       return;
     }
-    const { name, artist, cover } = data;
+    const { name, artist, cover, google_drive_uc_id } = data;
     const coverFile = cover[0];
     let coverPath = album?.cover;
     if (coverPath) {
@@ -75,6 +77,7 @@ export function AlbumForm({ onOpenChange, album }: AlbumFormProps) {
       name,
       artist,
       cover: coverPath,
+      google_drive_uc_id,
     });
     toast({ title: "OK" });
     onOpenChange(false);
@@ -114,14 +117,18 @@ export function AlbumForm({ onOpenChange, album }: AlbumFormProps) {
           control={form.control}
           name="cover"
           render={() => (
-            <FormItem>
+            <FormItem className="relative">
               <FormLabel>Cover</FormLabel>
               <FormControl>
-                <Input type="file" {...form.register("cover")} />
+                <Input
+                  className="w-[65%]"
+                  type="file"
+                  {...form.register("cover")}
+                />
               </FormControl>
               <FormDescription />
               <FormMessage />
-              <div className="aspect-square w-1/4">
+              <div className="absolute bottom-5 right-0 h-full w-[30%] translate-y-1/2">
                 {coverPreviewSrc ? (
                   <Image
                     src={coverPreviewSrc}
@@ -134,6 +141,20 @@ export function AlbumForm({ onOpenChange, album }: AlbumFormProps) {
                   <Skeleton className="size-full" />
                 )}
               </div>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="google_drive_uc_id"
+          render={() => (
+            <FormItem>
+              <FormLabel>Google Drive UC ID (URL)</FormLabel>
+              <FormControl>
+                <Input {...form.register("google_drive_uc_id")} />
+              </FormControl>
+              <FormDescription />
+              <FormMessage />
             </FormItem>
           )}
         />

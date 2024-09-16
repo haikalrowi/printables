@@ -12,12 +12,13 @@ export async function upsert({
   name,
   artist,
   cover,
+  google_drive_uc_id,
 }: Prisma.AlbumCreateInput) {
   await verifySession();
   await prisma.album.upsert({
     where: { id },
-    update: { name, artist, cover },
-    create: { name, artist, cover },
+    update: { name, artist, cover, google_drive_uc_id },
+    create: { name, artist, cover, google_drive_uc_id },
   });
   revalidatePath("/", "layout");
 }

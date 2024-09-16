@@ -15,7 +15,7 @@ export default async function DashboardPrintables() {
   return (
     <div className="grid justify-items-center gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3 xl:grid-cols-4">
       <AlbumArtwork
-        album={{ name: "", artist: "", cover: "" }}
+        album={{ name: "", artist: "", cover: "", google_drive_uc_id: "" }}
         albumCoverSrc="data:,"
         className="w-64 [&_img]:opacity-0"
         aspectRatio="square"
