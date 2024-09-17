@@ -23,12 +23,11 @@ export async function upsert({
   revalidatePath("/", "layout");
 }
 
-export async function findMany() {
-  return prisma.album.findMany();
-}
+export const { findMany } = prisma.album;
 
 export async function del({ id }: Prisma.AlbumWhereUniqueInput) {
   await verifySession();
+  await prisma.albumDownload.deleteMany({ where: { Album: { id } } });
   await prisma.album.delete({ where: { id } });
   revalidatePath("/", "layout");
 }

@@ -19,3 +19,5 @@ export async function create({
   revalidatePath("/", "layout");
   redirect(google_drive_uc_id);
 }
+
+export const { count } = prisma.albumDownload;
