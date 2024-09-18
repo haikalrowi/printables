@@ -17,10 +17,10 @@ export default async function DashboardPrintables() {
       <AlbumArtwork
         album={{ name: "", artist: "", cover: "", google_drive_uc_id: "" }}
         albumCoverSrc="data:,"
-        className="w-64 [&_img]:opacity-0"
+        className="w-60 [&_img]:opacity-0"
         aspectRatio="square"
-        width={16 * 16}
-        height={16 * 16}
+        width={16 * 12}
+        height={16 * 12}
         overlayContent={
           <DashboardPrintablesDialog
             action="create"
@@ -39,10 +39,10 @@ export default async function DashboardPrintables() {
             key={album.name}
             album={album}
             albumCoverSrc={albumCoverSrc}
-            className="w-64"
+            className="w-60"
             aspectRatio="square"
-            width={16 * 16}
-            height={16 * 16}
+            width={16 * 12}
+            height={16 * 12}
             overlayContent={
               <div className="absolute right-1 top-1 flex flex-col space-y-1 opacity-0 group-hover:opacity-100">
                 <DashboardPrintablesDialog
