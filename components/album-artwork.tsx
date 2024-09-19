@@ -10,7 +10,7 @@ export interface AlbumArtworkProps
     "id" | "name" | "artist" | "cover" | "google_drive_uc_id"
   >;
   albumCoverSrc: string;
-  aspectRatio?: "portrait" | "square";
+  aspectRatio?: "portrait" | "square" | "landscape";
   width?: number;
   height?: number;
   overlayContent?: React.ReactNode;
@@ -36,7 +36,9 @@ export function AlbumArtwork({
           height={height}
           className={cn(
             "h-auto w-full object-cover transition-all group-hover:scale-105",
-            aspectRatio === "portrait" ? "aspect-[3/4]" : "aspect-square",
+            aspectRatio === "portrait" && "aspect-[3/4]",
+            aspectRatio === "square" && "aspect-square",
+            aspectRatio === "landscape" && "aspect-[4/3]",
           )}
         />
         <div className="absolute inset-0">{overlayContent}</div>
