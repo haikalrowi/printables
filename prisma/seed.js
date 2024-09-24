@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 async function main() {
   const password =
-    "fb5f7fff4916f9828bb8ba228e98d15cb8ccf6cfde70fa11f02d4f6c9b089cdb784ead5a35123ee96fc8e011cd493416745353ea4813aa9bca6f58a366c19ed1";
+    "927c8db71b7a991cf8ab75479b09e536026cd0a522b1d7de6d0234fb2f8d2b22387021e4fca3e12bffd0adc99723e9c5b638a6fa478a878d633c99396ece9c5e";
   const alice = await prisma.user.upsert({
     where: { email: "alice@prisma.io" },
     update: {},
