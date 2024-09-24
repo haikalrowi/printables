@@ -123,6 +123,7 @@ export function AlbumForm({ onOpenChange, album }: AlbumFormProps) {
                 <Input
                   className="w-[65%]"
                   type="file"
+                  accept="image/*"
                   {...form.register("cover")}
                 />
               </FormControl>
