@@ -60,8 +60,12 @@ export function AlbumForm({ onOpenChange, album }: AlbumFormProps) {
     if (!onOpenChange) {
       return;
     }
-    const { name, artist, cover, google_drive_uc_id } = data;
-    const coverFile = cover[0];
+    const {
+      name,
+      artist,
+      cover: { 0: coverFile },
+      google_drive_uc_id,
+    } = data;
     let coverPath = album?.cover;
     if (coverPath) {
       if (coverFile?.size) {

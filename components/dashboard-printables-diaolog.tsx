@@ -24,6 +24,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
+import { createClient } from "@/lib/supabase/client";
+import { albumCover } from "@/lib/supabase/constants";
 
 import { AlbumArtworkProps } from "./album-artwork";
 import { AlbumForm } from "./album-form";
@@ -56,9 +58,14 @@ export function DashboardPrintablesDialog({
   const [deleteLoading, setDeleteLoading] = useState(false);
   const { toast } = useToast();
   const renderAlertDialogContent = () => {
+    if (!album) {
+      return null;
+    }
+    const supabase = createClient();
     const deleteAlbum = async () => {
       setDeleteLoading(true);
-      await del({ id: album?.id });
+      await supabase.storage.from(albumCover).remove([album.cover]);
+      await del({ id: album.id });
       setDeleteLoading(false);
       setOpenAlertDialog(false);
       toast({ title: "OK" });

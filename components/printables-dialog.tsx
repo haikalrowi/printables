@@ -30,7 +30,7 @@ export function PrintablesDialog({
   ...props
 }: PrintablesDialogProps) {
   const [open, setOpen] = useState(false);
-  if (!album?.cover) {
+  if (!album) {
     return null;
   }
   const supabase = createClient();
@@ -41,8 +41,8 @@ export function PrintablesDialog({
       <DialogTrigger {...props}>{triggerContent}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{album?.name}</DialogTitle>
-          <DialogDescription>{album?.artist}</DialogDescription>
+          <DialogTitle>{album.name}</DialogTitle>
+          <DialogDescription>{album.artist}</DialogDescription>
         </DialogHeader>
         <div className="flex space-x-5">
           <Image

@@ -44,11 +44,11 @@ export function PrintablesDownloadForm({
     },
   });
   const onSubmit: SubmitHandler<z.infer<typeof FormSchema>> = async (data) => {
-    if (!onOpenChange) {
+    if (!onOpenChange || !album) {
       return;
     }
     const { email } = data;
-    await create({ email, Album: { connect: { id: album?.id } } });
+    await create({ email, Album: { connect: { id: album.id } } });
     onOpenChange(false);
     toast({ title: "OK" });
   };
