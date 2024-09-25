@@ -10,8 +10,10 @@
     "biome check --write": "prettier app components --write && biome check --write",
     "prisma studio": "prisma studio",
     "prisma db seed": "prisma db seed",
+    "prisma db push --force-reset": "prisma db push --force-reset",
+    "prisma migrate dev": "prisma migrate dev",
     "prisma migrate reset": "prisma migrate reset",
-    "prisma db push --force-reset": "prisma db push --force-reset"
+    "prisma migrate status": "prisma migrate status"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
