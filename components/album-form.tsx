@@ -19,7 +19,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/hooks/use-toast";
 import { createClient } from "@/lib/supabase/client";
 import { albumCover } from "@/lib/supabase/constants";
@@ -119,17 +118,7 @@ export function AlbumForm({ onOpenChange, album }: AlbumFormProps) {
           render={() => (
             <FormItem className="relative">
               <FormLabel>Cover</FormLabel>
-              <FormControl>
-                <Input
-                  className="w-[65%]"
-                  type="file"
-                  accept="image/*"
-                  {...form.register("cover")}
-                />
-              </FormControl>
-              <FormDescription />
-              <FormMessage />
-              <div className="absolute bottom-5 right-0 h-full w-[30%] translate-y-1/2">
+              <div className="aspect-video w-[33%]">
                 {coverPreviewSrc ? (
                   <Image
                     src={coverPreviewSrc}
@@ -139,9 +128,21 @@ export function AlbumForm({ onOpenChange, album }: AlbumFormProps) {
                     className="size-full rounded-md object-cover"
                   />
                 ) : (
-                  <Skeleton className="size-full" />
+                  <div className="flex size-full items-center justify-center rounded-md bg-muted text-sm">
+                    Choose file
+                  </div>
                 )}
               </div>
+              <FormControl>
+                <Input
+                  className="absolute bottom-0 top-6 h-auto w-[33%] opacity-0"
+                  type="file"
+                  accept="image/*"
+                  {...form.register("cover")}
+                />
+              </FormControl>
+              <FormDescription />
+              <FormMessage />
             </FormItem>
           )}
         />
