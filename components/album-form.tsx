@@ -32,8 +32,8 @@ interface AlbumFormProps
 export function AlbumForm({ onOpenChange, album }: AlbumFormProps) {
   const supabase = createClient();
   const FormSchema = z.object({
-    name: z.string(),
-    artist: z.string(),
+    name: z.string().min(1, { message: "Must be minimal 1 char." }),
+    artist: z.string().min(1, { message: "Must be minimal 1 char." }),
     cover: z.instanceof(FileList),
     google_drive_uc_id: z.string().url({ message: "Must be URL." }),
   });
